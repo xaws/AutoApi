@@ -7,21 +7,22 @@ on:
   push:
     tags:
     - 'v*'
-  #  branches: 
-  #    - master
+#    branches: 
+#      - main
   schedule:
-    - cron: "12 */1 * * *"
+    - cron: "13 */4 * * 0-6"
   watch:
     types: [started]
    
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id || ${{ always() }}  # 自己点的 start
     steps:
     - name: Checkout
       uses: actions/checkout@master
     - name: Set up Python #安装python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: 3.8
     - name: Install requests #安装requests
@@ -56,3 +57,4 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
